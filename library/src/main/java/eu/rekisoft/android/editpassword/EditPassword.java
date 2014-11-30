@@ -1,3 +1,12 @@
+/**
+ * @copyright
+ * This code is licensed under the Rekisoft Public License.
+ * See http://www.rekisoft.eu/licenses/rkspl.html for more informations.
+ */
+/**
+ * @package eu.rekisoft.android.controls
+ * This package contains controls provided by [rekisoft.eu](http://rekisoft.eu/).
+ */
 package eu.rekisoft.android.editpassword;
 
 import android.annotation.TargetApi;
@@ -22,7 +31,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
 /**
- *
+ * Control for entering passwords, with the possibility to show the password on press.
  *
  * Created on 29.11.2014.
  * @author René Kilczan
@@ -119,7 +128,7 @@ public class EditPassword extends EditText implements View.OnTouchListener {
         public TintedDrawable(int image) {
             super(getResources().getDrawable(image), 0);
             Drawable d = getResources().getDrawable(image);
-            setBounds(0,0,d.getIntrinsicWidth(), d.getIntrinsicHeight());
+            setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
         }
 
         @Override
