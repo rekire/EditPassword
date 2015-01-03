@@ -1,1 +1,2 @@
-include ':library', ':sample'
+include ':library', ':sample', ':TintedDrawable'
+project(':TintedDrawable').projectDir = new File('TintedDrawable/library')
