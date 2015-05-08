@@ -9,7 +9,7 @@
  */
 package eu.rekisoft.android.demo.editpassword;
 
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +20,7 @@ import android.view.MenuItem;
  * Created on 29.11.2014.
  * @author René Kilczan
  */
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

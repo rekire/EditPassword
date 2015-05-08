@@ -9,11 +9,11 @@
  */
 package eu.rekisoft.android.editpassword;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.Resources;
-import android.os.Build;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -21,9 +21,6 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-
-import eu.rekisoft.android.tinteddrawable.TintedDrawable;
 
 /**
  * Control for entering passwords, with the possibility to show the password on press.
@@ -31,10 +28,10 @@ import eu.rekisoft.android.tinteddrawable.TintedDrawable;
  * Created on 29.11.2014.
  * @author René Kilczan
  */
-public class EditPassword extends EditText implements View.OnTouchListener {
+public class EditPassword extends AppCompatEditText implements View.OnTouchListener {
     private int mPreviousInputType;
-    private OnTouchListener mTouchListener;
-    private TintedDrawable show;
+    private View.OnTouchListener mTouchListener;
+    private Drawable show;
     private boolean mShowingPassword;
 
     public EditPassword(Context context) {
@@ -52,63 +49,19 @@ public class EditPassword extends EditText implements View.OnTouchListener {
         init();
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public EditPassword(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
-    }
-
     private void init() {
         super.setOnTouchListener(this);
-        show = new TintedDrawable(getResources().getDrawable(R.drawable.ic_show)) {
-            @Override
-            protected int getColor(boolean isPressed, boolean isFocused, boolean isActive) {
-                TypedValue typedValue = new TypedValue();
-                Resources.Theme theme = getContext().getTheme();
-                if(isActive) {
-                    //Log.d(TAG, "using active color");
-                    if(theme.resolveAttribute(R.attr.colorAccent, typedValue, true)) {
-                        return typedValue.data;
-                    //} else {
-                    //    Log.e(TAG, "Could not apply colorAccent.");
-                    }
-                } else if(isFocused) {
-                    //Log.d(TAG, "using focus color");
-                    if(theme.resolveAttribute(android.R.attr.textColorHint, typedValue, true)) {
-                        return typedValue.data;
-                    //} else {
-                    //    Log.e(TAG, "Could not apply textColorHint.");
-                    }
-                }
-                //Log.d(TAG, "using fallback color");
-                return getResources().getColor(R.color.primary_text_disabled_material_light);
-            }
-        };
+        show = DrawableCompat.wrap(getResources().getDrawable(R.drawable.ep_ic_show));
+        show.setBounds(0, 0, show.getIntrinsicWidth(), show.getIntrinsicHeight());
+        DrawableCompat.setTint(show, getResources().getColor(R.color.ep_show_tint));
         setCompoundDrawables(null, null, show, null);
         setInputType(getInputType() | EditorInfo.TYPE_TEXT_VARIATION_PASSWORD);
-        setBackgroundDrawable(new TintedDrawable(getResources().getDrawable(R.drawable.abc_edit_text_material)) {
-            @Override
-            protected int getColor(boolean isPressed, boolean isFocused, boolean isActive) {
-                TypedValue typedValue = new TypedValue();
-                Resources.Theme theme = getContext().getTheme();
-                if(hasFocus()) {
-                    //Log.d(TAG, "using focus color");
-                    if(theme.resolveAttribute(R.attr.colorAccent, typedValue, true)) {
-                        return typedValue.data;
-                    //} else {
-                    //    Log.e(TAG, "Could not apply textColorHint.");
-                    }
-                }
-                //Log.d(TAG, "using fallback color");
-                return getResources().getColor(R.color.bright_foreground_disabled_material_light);
-            }
-        });
     }
 
     @Override
     public boolean onKeyDown(int keyCode, @NonNull KeyEvent event) {
         if(event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
-            show.onStateChange(new int[] {android.R.attr.state_focused, android.R.attr.state_active});
+            updateState(android.R.attr.state_focused, android.R.attr.state_active);
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -116,7 +69,7 @@ public class EditPassword extends EditText implements View.OnTouchListener {
     @Override
     public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
         if(event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
-            show.onStateChange(new int[] {android.R.attr.state_focused});
+            updateState(android.R.attr.state_focused);
         }
         return super.onKeyUp(keyCode, event);
     }
@@ -141,9 +94,9 @@ public class EditPassword extends EditText implements View.OnTouchListener {
                 setInputType(EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD, true);
                 mShowingPassword = true;
                 if(v.hasFocus()) {
-                    show.onStateChange(new int[] {android.R.attr.state_focused, android.R.attr.state_pressed, android.R.attr.state_active});
+                    updateState(android.R.attr.state_focused, android.R.attr.state_pressed, android.R.attr.state_active);
                 } else {
-                    show.onStateChange(new int[] {android.R.attr.state_pressed, android.R.attr.state_active});
+                    updateState(android.R.attr.state_pressed, android.R.attr.state_active);
                 }
             }
             break;
@@ -155,9 +108,9 @@ public class EditPassword extends EditText implements View.OnTouchListener {
                 mPreviousInputType = -1;
                 mShowingPassword = false;
                 if(v.hasFocus()) {
-                    show.onStateChange(new int[] {android.R.attr.state_focused});
+                    updateState(android.R.attr.state_focused);
                 } else {
-                    show.onStateChange(new int[] {});
+                    updateState();
                 }
                 return true;
             }
@@ -165,6 +118,11 @@ public class EditPassword extends EditText implements View.OnTouchListener {
         }
 
         return mShowingPassword || (mTouchListener != null && mTouchListener.onTouch(v, event));
+    }
+
+    private void updateState(int... states) {
+        show.setState(states);
+        //drawableStateChanged();
     }
 
     private void setInputType(int inputType, boolean keepState) {
