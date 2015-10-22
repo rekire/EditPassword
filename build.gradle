@@ -17,3 +17,10 @@ allprojects {
         jcenter()
     }
 }
+
+ext {
+    compileSdkVersion = 23
+    buildToolsVersion = '23.0.1'
+    supportLibrary = '23.1.0'
+    compatibility_JavaVersion = JavaVersion.VERSION_1_7
+}
