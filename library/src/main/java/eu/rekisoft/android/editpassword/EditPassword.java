@@ -1,6 +1,6 @@
 /**
  * @copyright
- * This code is licensed under the Rekisoft Public License.
+ * This code is licensed under the Rekisoft Public License.<br/>
  * See http://www.rekisoft.eu/licenses/rkspl.html for more information.
  */
 /**
@@ -56,6 +56,7 @@ public class EditPassword extends AppCompatEditText implements View.OnTouchListe
         DrawableCompat.setTint(show, getResources().getColor(R.color.ep_show_tint));
         setCompoundDrawables(null, null, show, null);
         setInputType(getInputType() | EditorInfo.TYPE_TEXT_VARIATION_PASSWORD);
+        setSingleLine();
     }
 
     @Override
