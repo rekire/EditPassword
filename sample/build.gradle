@@ -1,20 +1,20 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "eu.rekisoft.android.demo.editpassword"
         minSdkVersion 9
-        targetSdkVersion 22
+        targetSdkVersion rootProject.ext.compileSdkVersion
         versionCode 1
         versionName "1.0"
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility = rootProject.ext.compatibility_JavaVersion
+        targetCompatibility = rootProject.ext.compatibility_JavaVersion
     }
     buildTypes {
         release {
@@ -25,6 +25,6 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:22.1.0'
+    compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibrary"
     compile project(':library')
 }
